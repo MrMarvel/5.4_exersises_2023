@@ -7,6 +7,7 @@ import android.os.Environment
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -39,11 +40,14 @@ class MainActivity : AppCompatActivity() {
         val share = Intent(Intent.ACTION_SEND)
 
         share.type = "image/*"
-
         val imagePath: String = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
                 .toString() + "/myImage.png"
         val imageFileToShare = File(imagePath)
-        val uri: Uri = Uri.fromFile(imageFileToShare)
+        val uri: Uri = FileProvider.getUriForFile(
+            applicationContext,
+            "ru.samsung.fileprovider",
+            imageFileToShare
+        )
         share.putExtra(Intent.EXTRA_STREAM, uri)
         startActivity(Intent.createChooser(share, "Share Image!"))
         Toast.makeText(applicationContext, "Image shared", Toast.LENGTH_LONG).show()
